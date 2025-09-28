@@ -1,0 +1,700 @@
+!trace 5                                                               
+!configuration -> _sig:__map, _alpha:__list, _rhos :__list
+                                                      (* gcd base operations *)
+
+-gt  _n1 |> __real64(_) _n2 |> __real64(_)--- gt(_n1,_n2) ,_sig,_alpha,   _rhos -> __gt(_n1,_n2) ,_sig,_alpha,_rhos
+-gtR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- gt(_n,_E2),_sig,_alpha,_rhos  -> gt(_n,_I2),_sigP,_alphaP,_rhosP
+-gt  _n1 |> __int32(_) _n2 |> __int32(_) --- gt(_n1,_n2) ,_sig,_alpha,   _rhos -> __gt(_n1,_n2) ,_sig,_alpha,_rhos
+-gtR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- gt(_n,_E2),_sig,_alpha,_rhos  -> gt(_n,_I2),_sigP,_alphaP,_rhosP
+-gtL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- gt(_E1,_E2),_sig,_alpha,_rhos -> gt(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-lt  _n1 |> __real64(_) _n2 |> __real64(_)--- lt(_n1,_n2) ,_sig,_alpha,   _rhos -> __lt(_n1,_n2) ,_sig,_alpha,_rhos
+-ltR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- lt(_n,_E2),_sig,_alpha,_rhos  -> lt(_n,_I2),_sigP,_alphaP,_rhosP
+-lt  _n1 |> __int32(_) _n2 |> __int32(_) --- lt(_n1,_n2) ,_sig,_alpha,   _rhos -> __lt(_n1,_n2) ,_sig,_alpha,_rhos
+-ltR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- lt(_n,_E2),_sig,_alpha,_rhos  -> lt(_n,_I2),_sigP,_alphaP,_rhosP
+-ltL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- lt(_E1,_E2),_sig,_alpha,_rhos -> lt(_I1,_E2),_sigP,_alphaP,_rhosP
+
+-mod  _n1 |> __real64(_) _n2 |> __real64(_)--- mod(_n1,_n2) ,_sig,_alpha,   _rhos -> __mod(_n1,_n2) ,_sig,_alpha,_rhos
+-modR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- mod(_n,_E2),_sig,_alpha,_rhos  -> mod(_n,_I2),_sigP,_alphaP,_rhosP
+-mod  _n1 |> __int32(_) _n2 |> __int32(_) --- mod(_n1,_n2) ,_sig,_alpha,   _rhos -> __mod(_n1,_n2) ,_sig,_alpha,_rhos
+-modR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- mod(_n,_E2),_sig,_alpha,_rhos  -> mod(_n,_I2),_sigP,_alphaP,_rhosP
+-modL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- mod(_E1,_E2),_sig,_alpha,_rhos -> mod(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-exp  _n1 |> __real64(_) _n2 |> __real64(_)--- exp(_n1,_n2) ,_sig,_alpha,   _rhos -> __exp(_n1,_n2) ,_sig,_alpha,_rhos
+-expR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- exp(_n,_E2),_sig,_alpha,_rhos  -> exp(_n,_I2),_sigP,_alphaP,_rhosP
+-exp  _n1 |> __int32(_) _n2 |> __int32(_) --- exp(_n1,_n2) ,_sig,_alpha,   _rhos -> __exp(_n1,_n2) ,_sig,_alpha,_rhos
+-expR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- exp(_n,_E2),_sig,_alpha,_rhos  -> exp(_n,_I2),_sigP,_alphaP,_rhosP
+-expL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- exp(_E1,_E2),_sig,_alpha,_rhos -> exp(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+// -addList  _n1 |> __int32(_) --- add(_n1,[]) ,_sig,_alpha,   _rhos -> _n1 ,_sig,_alpha,_rhos
+// -addListR  _n1 |> __int32(_) _n2 |> __list(_) __get(_n2,0) ,_sig,_alpha,_rhos -> _head,_sig,_alpha,_rhos  _head |> __int32(_)
+// --- add(_n1,_n2) ,_sig,_alpha,   _rhos -> add(__add(_n1,_head),__remove(_n2,0)) ,_sig,_alpha,_rhos
+-add  _n1 |> __real64(_) _n2 |> __real64(_)--- add(_n1,_n2) ,_sig,_alpha,   _rhos -> __add(_n1,_n2) ,_sig,_alpha,_rhos
+-addR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- add(_n,_E2),_sig,_alpha,_rhos  -> add(_n,_I2),_sigP,_alphaP,_rhosP
+-add  _n1 |> __int32(_) _n2 |> __int32(_) --- add(_n1,_n2) ,_sig,_alpha,   _rhos -> __add(_n1,_n2) ,_sig,_alpha,_rhos
+-addR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- add(_n,_E2),_sig,_alpha,_rhos  -> add(_n,_I2),_sigP,_alphaP,_rhosP
+-addL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- add(_E1,_E2),_sig,_alpha,_rhos -> add(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-ne  _n1 |> __bool(_) _n2 |> __bool(_)--- ne(_n1,_n2) ,_sig,_alpha,   _rhos -> __ne(_n1,_n2) ,_sig,_alpha,_rhos
+-neR _n |>  __bool(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- ne(_n,_E2),_sig,_alpha,_rhos  -> ne(_n,_I2),_sigP,_alphaP,_rhosP
+-ne  _n1 |> __real64(_) _n2 |> __real64(_)--- ne(_n1,_n2) ,_sig,_alpha,   _rhos -> __ne(_n1,_n2) ,_sig,_alpha,_rhos
+-neR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- ne(_n,_E2),_sig,_alpha,_rhos  -> ne(_n,_I2),_sigP,_alphaP,_rhosP
+-ne  _n1 |> __int32(_) _n2 |> __int32(_) --- ne(_n1,_n2) ,_sig,_alpha,   _rhos -> __ne(_n1,_n2) ,_sig,_alpha,_rhos
+-neR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- ne(_n,_E2),_sig,_alpha,_rhos  -> ne(_n,_I2),_sigP,_alphaP,_rhosP
+-neL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- ne(_E1,_E2),_sig,_alpha,_rhos -> ne(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-eq  _n1 |> __bool(_) _n2 |> __bool(_)--- eq(_n1,_n2) ,_sig,_alpha,   _rhos -> __eq(_n1,_n2) ,_sig,_alpha,_rhos
+-eqR _n |>  __bool() _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- eq(_n,_E2),_sig,_alpha,_rhos  -> eq(_n,_I2),_sigP,_alphaP,_rhosP
+-eq  _n1 |> __real64(_) _n2 |> __real64(_)--- eq(_n1,_n2) ,_sig,_alpha,   _rhos -> __eq(_n1,_n2) ,_sig,_alpha,_rhos
+-eqR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- eq(_n,_E2),_sig,_alpha,_rhos  -> eq(_n,_I2),_sigP,_alphaP,_rhosP
+-eq  _n1 |> __int32(_) _n2 |> __int32(_) --- eq(_n1,_n2) ,_sig,_alpha,   _rhos -> __eq(_n1,_n2) ,_sig,_alpha,_rhos
+-eqR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- eq(_n,_E2),_sig,_alpha,_rhos  -> eq(_n,_I2),_sigP,_alphaP,_rhosP
+-eqL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- eq(_E1,_E2),_sig,_alpha,_rhos -> eq(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-ge  _n1 |> __real64(_) _n2 |> __real64(_)--- ge(_n1,_n2) ,_sig,_alpha,   _rhos -> __ge(_n1,_n2) ,_sig,_alpha,_rhos
+-geR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- ge(_n,_E2),_sig,_alpha,_rhos  -> ge(_n,_I2),_sigP,_alphaP,_rhosP
+-ge  _n1 |> __int32(_) _n2 |> __int32(_) --- ge(_n1,_n2) ,_sig,_alpha,   _rhos -> __ge(_n1,_n2) ,_sig,_alpha,_rhos
+-geR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- ge(_n,_E2),_sig,_alpha,_rhos  -> ge(_n,_I2),_sigP,_alphaP,_rhosP
+-geL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- ge(_E1,_E2),_sig,_alpha,_rhos -> ge(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-le  _n1 |> __real64(_) _n2 |> __real64(_)--- le(_n1,_n2) ,_sig,_alpha,   _rhos -> __le(_n1,_n2) ,_sig,_alpha,_rhos
+-leR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- le(_n,_E2),_sig,_alpha,_rhos  -> le(_n,_I2),_sigP,_alphaP,_rhosP
+-le  _n1 |> __int32(_) _n2 |> __int32(_) --- le(_n1,_n2) ,_sig,_alpha,   _rhos -> __le(_n1,_n2) ,_sig,_alpha,_rhos
+-leR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- le(_n,_E2),_sig,_alpha,_rhos  -> le(_n,_I2),_sigP,_alphaP,_rhosP
+-leL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- le(_E1,_E2),_sig,_alpha,_rhos -> le(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-sub  _n1 |> __real64(_) _n2 |> __real64(_)--- sub(_n1,_n2) ,_sig,_alpha,   _rhos -> __sub(_n1,_n2) ,_sig,_alpha,_rhos
+ -subR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- sub(_n,_E2),_sig,_alpha,_rhos  -> sub(_n,_I2),_sigP,_alphaP,_rhosP
+-sub  _n1 |> __int32(_) _n2 |> __int32(_) --- sub(_n1,_n2) ,_sig,_alpha,   _rhos -> __sub(_n1,_n2) ,_sig,_alpha,_rhos
+-subR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- sub(_n,_E2),_sig,_alpha,_rhos  -> sub(_n,_I2),_sigP,_alphaP,_rhosP
+-subL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- sub(_E1,_E2),_sig,_alpha,_rhos -> sub(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+
+-mul  _n1 |> __real64(_) _n2 |> __real64(_)--- mul(_n1,_n2) ,_sig,_alpha,   _rhos -> __mul(_n1,_n2) ,_sig,_alpha,_rhos
+-mulR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- mul(_n,_E2),_sig,_alpha,_rhos  -> mul(_n,_I2),_sigP,_alphaP,_rhosP
+-mul  _n1 |> __int32(_) _n2 |> __int32(_) --- mul(_n1,_n2) ,_sig,_alpha,   _rhos -> __mul(_n1,_n2) ,_sig,_alpha,_rhos
+-mulR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- mul(_n,_E2),_sig,_alpha,_rhos  -> mul(_n,_I2),_sigP,_alphaP,_rhosP
+-mulL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- mul(_E1,_E2),_sig,_alpha,_rhos -> mul(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-div  _n1 |> __real64(_) _n2 |> __real64(_)--- div(_n1,_n2) ,_sig,_alpha,   _rhos -> __div(_n1,_n2) ,_sig,_alpha,_rhos
+-divR _n |>  __real64(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- div(_n,_E2),_sig,_alpha,_rhos  -> div(_n,_I2),_sigP,_alphaP,_rhosP
+-div  _n1 |> __int32(_) _n2 |> __int32(_) --- div(_n1,_n2) ,_sig,_alpha,   _rhos -> __div(_n1,_n2) ,_sig,_alpha,_rhos
+-divR _n |>  __int32(_) _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP,_rhosP --- div(_n,_E2),_sig,_alpha,_rhos  -> div(_n,_I2),_sigP,_alphaP,_rhosP
+-divL _E1,_sig,_alpha,_rhos -> _I1,_sigP,_alphaP,_rhosP                  --- div(_E1,_E2),_sig,_alpha,_rhos -> div(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-sequenceDone      --- seq(__done, _C),_sig,_alpha,_rhos -> _C,_sig,_alpha,_rhos
+-sequence _C1,_sig,_alpha,_rhos -> _C1P,_sigP,_alphaP,_rhosP --- seq(_C1,_C2),_sig,_alpha,_rhos -> seq(_C1P,_C2),_sigP,_alphaP,_rhosP
+
+
+-ifelseTrue                          --- if(true,_C1,_C2),_sig,_alpha,_rhos  -> _C1,_sig,_alpha,_rhos 
+-ifelseFalse                         --- if(false,_C1,_C2),_sig,_alpha,_rhos  -> _C2,_sig,_alpha,_rhos 
+-ifelseResolve _E,_sig,_alpha,_rhos  -> _EP,_sigP,_alphaP,_rhosP --- if(_E,_C1,_C2),_sig,_alpha,_rhos -> if(_EP,_C1,_C2),_sigP,_alphaP,_rhosP
+
+-ifTrue                          --- if(true,_C1),_sig,_alpha,_rhos  -> _C1,_sig,_alpha,_rhos 
+-ifFalse                         --- if(false,_C1),_sig,_alpha,_rhos  -> __done,_sig,_alpha,_rhos 
+-ifResolve _E,_sig,_alpha,_rhos  -> _EP,_sigP,_alphaP,_rhosP --- if(_E,_C1),_sig,_alpha,_rhos -> if(_EP,_C1),_sigP,_alphaP,_rhosP
+
+-while --- while(_E,_C),_sig,_alpha,_rhos -> if(_E,seq(_C,while(_E,_C)),__done),_sig,_alpha,_rhos
+
+-output _E |> __bool(_) _E ,_sig,_alpha ,_rhos -> _EP, _sigP,_alphaP,_rhosP --- output(_E), _sig, _alpha,_rhos  -> __done,_sigP, __put(_alphaP, 0, _EP),_rhosP
+-output _E |> __real64(_) _E ,_sig,_alpha ,_rhos -> _EP, _sigP,_alphaP,_rhosP --- output(_E), _sig, _alpha,_rhos  -> __done,_sigP, __put(_alphaP, 0, _EP),_rhosP
+-output _E |> __int32(_) _E ,_sig,_alpha ,_rhos -> _EP, _sigP,_alphaP,_rhosP --- output(_E), _sig, _alpha,_rhos  -> __done,_sigP, __put(_alphaP, 0, _EP),_rhosP
+-output _E |> __string(_) _E ,_sig,_alpha ,_rhos -> _EP, _sigP,_alphaP,_rhosP --- output(_E), _sig, _alpha,_rhos  -> __done,_sigP, __put(_alphaP, 0, _EP),_rhosP
+-outputResolve _E, _sig,_alpha ,_rhos -> _EP, _sigP,_alphaP,_rhosP --- output(_E), _sig, _alpha,_rhos  ->  output(_EP), _sigP, _alphaP,_rhosP
+
+                                                       (*own operations*)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-isInt _n |> __int32(_) ---isInt(_n),_sig,_alpha,_rhos -> true,_sig,_alpha,_rhos
+-isInt _n |> __bool(_) ---isInt(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isInt _n |>  __real64(_) ---isInt(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isInt _n |> __string(_)  ---isInt(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isIntResolve _n ,_sig,_alpha,_rhos -> _nP,_sigP,_alphaP,_rhosP  ---isInt(_n),_sig,_alpha,_rhos -> isInt(_nP),_sigP,_alphaP,_rhosP
+
+-isBool _n |>  __bool(_)---isBool(_n),_sig,_alpha,_rhos -> true,_sig,_alpha,_rhos
+-isBool _n |> __int32(_) ---isBool(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isBool _n |> __real64(_) ---isBool(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isBool _n |> __string(_) ---isBool(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isBoolResolve _n ,_sig,_alpha,_rhos -> _nP,_sigP,_alphaP,_rhosP  ---isBool(_n),_sig,_alpha,_rhos -> isBool(_nP),_sigP,_alphaP,_rhosP
+
+-isEmpty _n |> __int32(_)  ---isEmpty(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty _n |> __bool(_) ---isEmpty(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty _n |> __real64(_) ---isEmpty(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty _n |> __string(_) ---isEmpty(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty _n |> __list(_) ---isEmpty(_n),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty ---isEmpty(lambda(_P,_E)),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty  ---isEmpty(__done),_sig,_alpha,_rhos -> false,_sig,_alpha,_rhos
+-isEmpty  ---isEmpty(__empty),_sig,_alpha,_rhos -> true,_sig,_alpha,_rhos
+-isEmptyResolve _E ,_sig,_alpha,_rhos -> _EP,_sigP,_alphaP,_rhosP  ---isEmpty(_E),_sig,_alpha,_rhos -> isEmpty(_EP),_sigP,_alphaP,_rhosP
+
+
+-cast     _N |> __int32(_)        --- cast(_N,__real64()),_sig,_alpha,_rhos  -> __cast(_N,__real64()),_sig,_alpha,_rhos 
+-cast     _N |> __int32(_)        --- cast(_N,__bool()),_sig,_alpha,_rhos  -> if(eq(_N,0),false,true),_sig,_alpha,_rhos 
+-cast     _N |> __bool(_)        --- cast(_N,__int32()),_sig,_alpha,_rhos  -> if(eq(_N,true),1,0),_sig,_alpha,_rhos 
+-castReslove _E1,_sig,_alpha,_rhos  -> _I1,_sigP,_alphaP,_rhosP   --- cast(_E1,_E2),_sig,_alpha,_rhos  -> cast(_I1,_E2),_sigP,_alphaP,_rhosP
+
+
+-and  _n1 |> __bool(_) _n2 |> __bool(_)  --- and(_n1,_n2),_sig,_alpha,_rhos  -> __and(_n1,_n2),_sig,_alpha,_rhos 
+-andR _n |> __bool(_)  _E2,_sig,_alpha,_rhos  -> _I2,_sigP,_alphaP ,_rhosP--- and(_n,_E2) ,_sig,_alpha,_rhos   -> and(_n,_I2),_sigP,_alphaP,_rhosP
+-and  _n1 |> __int32(_) _n2 |> __int32(_)  --- and(_n1,_n2),_sig,_alpha,_rhos -> if(ne(0,__and(_n1,_n2)), true,false),_sig,_alpha,_rhos
+-andR _n |> __int32(_)  _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP ,_rhosP--- and(_n,_E2) ,_sig,_alpha,_rhos  -> and(_n,_I2),_sigP,_alphaP,_rhosP
+-andL _E1,_sig,_alpha,_rhos  -> _I1,_sigP,_alphaP,_rhosP  --- and(_E1,_E2),_sig,_alpha,_rhos   -> and(_I1,_E2),_sigP,_alphaP ,_rhosP
+
+
+-or  _n1 |> __bool(_) _n2 |> __bool(_)  --- or(_n1,_n2),_sig,_alpha,_rhos  -> __or(_n1,_n2),_sig,_alpha,_rhos 
+-orR _n |> __bool(_)  _E2,_sig,_alpha,_rhos  -> _I2,_sigP,_alphaP ,_rhosP--- or(_n,_E2) ,_sig,_alpha,_rhos   -> or(_n,_I2),_sigP,_alphaP,_rhosP
+-or  _n1 |> __int32(_) _n2 |> __int32(_)  --- or(_n1,_n2),_sig,_alpha,_rhos -> if(ne(0,__or(_n1,_n2)), true,false),_sig,_alpha,_rhos
+-orR _n |> __int32(_)  _E2,_sig,_alpha,_rhos -> _I2,_sigP,_alphaP ,_rhosP--- or(_n,_E2) ,_sig,_alpha,_rhos  -> or(_n,_I2),_sigP,_alphaP,_rhosP
+-orL _E1,_sig,_alpha,_rhos  -> _I1,_sigP,_alphaP,_rhosP  --- or(_E1,_E2),_sig,_alpha,_rhos   -> or(_I1,_E2),_sigP,_alphaP ,_rhosP
+
+
+-not  _n |> __bool(_)  --- not(_n),_sig,_alpha,_rhos  -> __not(_n),_sig,_alpha,_rhos 
+-not  _n |> __int32(_)  --- not(_n),_sig,_alpha,_rhos  -> if(eq(0,_n),true,false),_sig,_alpha,_rhos
+-notResolve _E,_sig,_alpha,_rhos  -> _I,_sigP,_alphaP,_rhosP  --- not(_E),_sig,_alpha,_rhos   -> not(_I),_sigP,_alphaP ,_rhosP
+
+
+-plusplus      ---plusPlus(_V),_sig,_alpha,_rhos  -> assign(_V,add(deref(_V),1)),_sig,_alpha,_rhos 
+-minusminus    ---minusMinus(_V),_sig,_alpha ,_rhos ->assign(_V,sub(deref(_V),1)),_sig,_alpha,_rhos 
+
+
+
+////////////////looping///////////////////////////////
+
+-for --- for(assign(_V,_A),_E,_Inc,_C),_sig,_alpha,_rhos       -> let(assign(_V,_A),while(_E,seq(_C,_Inc))),_sig,_alpha,_rhos
+
+-mapdone --- mapCollect(_R,_F,[]),_sig,_alpha,_rhos -> _R ,_sig,_alpha,_rhos //todo - only accept lambda or funcs
+-mapplydone _Edone |> __real64(_)  ---mapApply(_Edone, mapCollect(_R,lambda(_P,_E),_I)) ,_sig,_alpha,_rhos->  mapCollect(__put(_R ,__card(_R),_Edone), lambda(_P,_E), _I),_sig,_alpha,_rhos
+-mapplydone _Edone |> __int32(_)  ---mapApply(_Edone, mapCollect(_R,lambda(_P,_E),_I)) ,_sig,_alpha,_rhos->  mapCollect(__put(_R ,__card(_R),_Edone), lambda(_P,_E), _I),_sig,_alpha,_rhos
+-mapplyR _E,_sig,_alpha,_rhos->  _EP,_sigP,_alphaP,_rhosP --- mapApply(_E,_E2),_sig,_alpha,_rhos ->  mapApply(_EP,_E2),_sigP,_alphaP,_rhosP
+-mapcollect---mapCollect(_R,lambda(_P,_E),_I) ,_sig,_alpha,_rhos -> mapApply(funcall(lambda(_P,_E),__put([],0,__get(_I,0))),mapCollect(_R,lambda(_P,_E),__remove(_I,0))),_sig,_alpha,_rhos
+-emptymap --- map(lambda(_P,_E),[]),_sig,_alpha,_rhos ->  [],_sig,_alpha,_rhos
+-map _I |> __list(_) --- map(lambda(_P,_E),_I),_sig,_alpha,_rhos ->  mapCollect([],lambda(_P,_E),_I),_sig,_alpha,_rhos
+
+
+
+////////////////////////control flow/////////////////////
+!terminal -> error(),break(),case()
+
+//updated switch and try with nested breaks and errors
+-switchDone --- switchSeq(__done,__done),_sig,_alpha,_rhos ->__done ,_sig,_alpha,_rhos
+-switchLast  --- switch(_E1,case(_C,_E2)) ,_sig,_alpha,_rhos -> if(eq(_E1, _C),switchSeq(_E2,__done),__done), _sig,_alpha,_rhos
+-switchBreakearly ---  switchSeq(seq(break(),_),switch(_E1,_Erest)),_sig,_alpha,_rhos ->__done ,_sig,_alpha,_rhos
+-switchBreak --- switchSeq(break(),switch(_E1,_Erest)),_sig,_alpha,_rhos ->__done ,_sig,_alpha,_rhos
+-switchBreak --- switchSeq(break(),switch(_E1,_Erest)),_sig,_alpha,_rhos ->__done ,_sig,_alpha,_rhos
+-switchseqdone --- switchSeq(__done,switch(_E1,_Erest)),_sig,_alpha,_rhos ->switch(_E1,_Erest) ,_sig,_alpha,_rhos
+-switchseq _E2,_sig,_alpha,_rhos -> _E2P,_sigP,_alphaP,_rhosP  ---switchSeq(_E2,switch(_E1,_Erest)),_sig,_alpha,_rhos  -> switchSeq(_E2P,switch(_E1,_Erest)), _sigP,_alphaP,_rhosP 
+-switchseqLast _E2,_sig,_alpha,_rhos -> _E2P,_sigP,_alphaP,_rhosP  ---switchSeq(_E2,__done),_sig,_alpha,_rhos  -> switchSeq(_E2P,__done), _sigP,_alphaP,_rhosP 
+-switch --- switch(_E1,case(_C,_E2,_Erest)) ,_sig,_alpha,_rhos -> if(eq(_E1, _C),switchSeq(_E2,switch(_E1,_Erest)),switch(_E1,_Erest)), _sig,_alpha,_rhos
+
+
+-tryCatchError --- tryCatch(error(),_E) ,_sig,_alpha,_rhos  -> _E ,_sig,_alpha,_rhos 
+-tryCatchErrorLate --- tryCatch(seq(error(),_),_E) ,_sig,_alpha,_rhos  -> _E ,_sig,_alpha,_rhos 
+-tryCatchDone --- tryCatch(__done,_E) ,_sig,_alpha,_rhos  -> __done ,_sig,_alpha,_rhos  
+-tryCatchResolve _E1,_sig,_alpha,_rhos  -> _E1P,_sigP,_alphaP,_rhosP  ---tryCatch(_E1,_E2) ,_sig,_alpha ,_rhos -> tryCatch(_E1P,_E2) ,_sigP,_alphaP,_rhosP 
+-tryFinally  ---   tryCatchFinally(_E1,_E2,_E3),_sig,_alpha,_rhos  ->  seq(tryCatch(_E1,_E2),_E3),_sig,_alpha,_rhos 
+
+   
+
+////////////////// scoping///////////////////////
+//creates global scope
+---setup(_E) ,_sig,_alpha,_rhos-> _E , _sig,_alpha , __put(_rhos,0,{=}) //todo - use for module system
+
+-assign  _A |> __list(_)  ---assign(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,__sub(__card(_rhos),1)),_sig,_alpha ,_rhos
+-assign  _A |> __string(_)  ---assign(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,__sub(__card(_rhos),1)),_sig,_alpha ,_rhos
+-assign  _A |> __int32(_)   ---assign(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,__sub(__card(_rhos),1)),_sig,_alpha ,_rhos
+-assign  _A |> __real64(_)  ---assign(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,__sub(__card(_rhos),1)),_sig,_alpha ,_rhos
+-assignG  _A |> __list(_) ---assignGlobal(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,0),_sig,_alpha ,_rhos
+-assignG  _A |> __string(_) ---assignGlobal(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,0),_sig,_alpha ,_rhos
+-assignG  _A |> __int32(_)  ---assignGlobal(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,0),_sig,_alpha ,_rhos
+-assignG  _A |> __real64(_) ---assignGlobal(_V,_A),_sig,_alpha ,_rhos->  assignPos(_V,_A,0),_sig,_alpha ,_rhos,_sig//defvar
+---assignPos(_V,_A,_n),_sig,_alpha ,_rhos->  
+                             __done,
+                             __put(_sig,__card(_sig),_A),
+                             _alpha,
+                             __put(__remove(_rhos,_n),_n,__put(__get(_rhos,_n),_V,__card(_sig)))//create new rhostack made with changed indexed rho
+-assignR _E,_sig,_alpha,_rhos  -> _I,_sigP,_alphaP,_rhosP--- assign(_V,_E),_sig,_alpha,_rhos  -> assign(_V,_I),_sigP,_alphaP,_rhosP
+
+
+-deref --- deref(_V),_sig,_alpha,_rhos -> findInRhoStack(_V,__sub(__card(_rhos),1)),_sig,_alpha,_rhos //derefGlobal ?
+
+// searches stack of rhos for value associated with variable 
+-findInRhoStack  _n |> __int32(_)    __get(_sig,__get(__get(_rhos,_n),_X)) ,_sig,_alpha,_rhos -> _var,_sig,_alpha,_rhos 
+---findInRhoStack(_X,_n) ,_sig,_alpha,_rhos -> 
+                        if(eq(_n,-1), __empty, if(isEmpty(_var), findInRhoStack(_X,__sub(_n,1)),_var)), _sig,_alpha,_rhos
+                        
+// todo - remove values not being referenced anymore
+!terminal -> lambdaBody(),lambda(),return()
+
+
+
+-letLeaveEnvironment  ---letLeaveEnvironment()  ,_sig,_alpha,_rhos -> __done, _sig,_alpha,     __remove(_rhos,__sub(__card(_rhos),1))
+-letReturnDone    _E |> __int32(_)    ---letBody(seq(return(_E),_Erest)),_sig,_alpha,_rhos  ->  seq(letLeaveEnvironment(),_E),_sig,_alpha,_rhos 
+-letReturnDone    _E |> __real64(_)     ---letBody(seq(return(_E),_Erest)),_sig,_alpha,_rhos  ->  seq(letLeaveEnvironment(),_E),_sig,_alpha,_rhos 
+-letReturnDone    _E |> __bool(_)     ---letBody(seq(return(_E),_Erest)),_sig,_alpha,_rhos  ->  seq(letLeaveEnvironment(),_E),_sig,_alpha,_rhos 
+
+-letReturnResolve _E, _sig, _alpha, _rhos -> _I, _sigP, _alphaP, _rhosP  ---letBody(seq(return(_E),_Erest)),_sig,_alpha,_rhos  ->  letBody(seq(return(_I),_Erest)),_sigP,_alphaP,_rhos
+-letsNested           ---letBody(__done),_sig,_alpha,_rhos ->    letLeaveEnvironment() ,_sig,_alpha,_rhos //todo - check if needed
+-letBodyDone          ---letBody(_E,__done),_sig,_alpha,_rhos  -> seq(_E,letLeaveEnvironment()),_sig,_alpha,_rhos
+-letBodyResolve       ---letBody(seq(_E1,_E2)),_sig,_alpha,_rhos     -> seq(_E1,letBody(_E2)),_sig,_alpha,_rhos
+-letParameterDone     ---LetParams(__done,_E),_sig,_alpha,_rhos -> letBody(seq(_E,__done)),_sig,_alpha,_rhos //todo - maybe allow singular values not in form seq
+-letParamResolve      ---LetParams(seq(_P1,_Prest),_E),_sig,_alpha,_rhos  -> seq(_P1,LetParams(_Prest,_E)),_sig,_alpha,_rhos
+-letEnterEnvironment  ---let(_P,_E)  ,_sig,_alpha,_rhos -> LetParams(seq(_P, __done),_E) ,_sig,_alpha, __put(_rhos, __card(_rhos),{=})  
+
+-lambdaToLet         ---lambdaParams(_P,lambdaBody([],[],_E)),_sig,_alpha,_rhos   -> let(_P,_E),_sig,_alpha,_rhos 
+-lambdaParamsResolve  ---lambdaParams(_P,lambdaBody(_PL,_XL,_E)),_sig,_alpha,_rhos -> lambdaParams(seq(_P,assign(__get(_PL,0),__get(_XL,0))),lambdaBody(__remove(_PL,0),__remove(_XL,0),_E)),_sig,_alpha,_rhos
+-lambda _PL |> __list(_)  _XL |> __list(_)   ---funcall(lambda(_PL,_E),_XL) ,_sig,_alpha,_rhos      ->    lambdaParams(__done,lambdaBody(_PL,_XL,_E)),_sig,_alpha,_rhos
+-lambdaNoVars ---funcall(lambda([],_E)) ,_sig,_alpha,_rhos      ->    letBody(seq(_E,__done)),_sig,_alpha,_rhos
+
+
+-funcallFunction _PL |> __list(_)  _XL |> __list(_)   ---funcall([lambda(_PL,_E)],_XL) ,_sig,_alpha,_rhos      ->    lambdaParams(__done,lambdaBody(_PL,_XL,_E)),_sig,_alpha,_rhos
+-funcallLambdaNoVars ---funcall([lambda([],_E)],[]) ,_sig,_alpha,_rhos      ->    letBody(_E,__done),_sig,_alpha,_rhos
+-funcallResolve         _P,_sig,_alpha,_rhos->_PP,_sigP,_alphaP,_rhosP    ---funcall(_P,_E) ,_sig,_alpha,_rhos      ->   funcall(_PP,_E) ,_sigP,_alphaP,_rhosP
+-defun  ---defun(_N,_P,_E) ,_sig ,_alpha,_rhos  ->   assign(_N,__put([],0,lambda(_P,_E))),_sig,_alpha,_rhos
+-func ---func(_N,_P),_sig ,_alpha,_rhos  -> funcall(deref(_N),_P),_sig ,_alpha,_rhos 
+-funcNoVar ---func(_N),_sig ,_alpha,_rhos  -> funcall(deref(_N),[]),_sig ,_alpha,_rhos 
+
+-index _x |> __list(_)  _i |> __int32(_) --- index(_x,_i) ,_sig ,_alpha,_rhos ->  __get(_x,_i),_sig ,_alpha,_rhos 
+-index _x ,_sig ,_alpha,_rhos  -> _xP, _sigP ,_alphaP,_rhosP         --- index(_x,_i) ,_sig ,_alpha,_rhos ->  index(_xP,_i),_sigP ,_alphaP,_rhosP 
+
+
+
+/////////////////////////plugin/////////////////////////////
+
+-plugin --- plugin(_O),_sig,_alpha ,_rhos -> __plugin(_O),_sig,_alpha,_rhos 
+
+-plugin _n |> __int32(_)--- plugin(_O, _n),_sig,_alpha,_rhos -> __plugin(_O, _n),_sig,_alpha,_rhos 
+-pluginR _A,_sig,_alpha,_rhos -> _AP,_sigP,_alphaP,_rhosP  --- plugin(_name,_A),_sig,_alpha,_rhos ->plugin(_name,_AP),_sigP,_alphaP,_rhosP 
+
+
+-plugins2 _n |> __string(_) _n2|> __int32(_)   --- plugin(_name,_n,_n2),_sig,_alpha,_rhos -> __plugin(_name, _n, _n2),_sig,_alpha,_rhos
+-plugins1 _n |> __string(_) _A2,_sig,_alpha,_rhos -> _A2P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_A2),_sig,_alpha,_rhos ->plugin(_name,_n,_A2P),_sigP,_alphaP,_rhosP 
+-plugin _n |> __int32(_) _n2|> __int32(_)   --- plugin(_name,_n,_n2),_sig,_alpha,_rhos -> __plugin(_name, _n, _n2),_sig,_alpha,_rhos
+-plugin2 _n |> __int32(_) _A2,_sig,_alpha,_rhos -> _A2P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_A2),_sig,_alpha,_rhos ->plugin(_name,_n,_A2P),_sigP,_alphaP,_rhosP 
+-plugin1 _A,_sig,_alpha,_rhos -> _AP ,_sigP,_alphaP,_rhosP --- plugin(_name,_A,_A2),_sig,_alpha,_rhos ->plugin(_name,_AP,_A2),_sigP,_alphaP,_rhosP 
+
+-plugin _n |> __int32(_) _n2 |> __int32(_) _n3 |> __int32(_) ---   plugin(_name,_n,_n2,_n3) ,_sig,_alpha,_rhos  -> __plugin(_name ,_n,_n2,_n3),_sig,_alpha,_rhos 
+-plugin3 _n |> __int32(_) _n2|> __int32(_) _A3,_sig,_alpha,_rhos -> _A3P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_n2,_A3),_sig,_alpha,_rhos ->plugin(_name,_n,_n2,_A3P),_sigP,_alphaP,_rhosP 
+-plugin2 _n |> __int32(_) _A2,_sig,_alpha,_rhos -> _A2P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_A2,_A3),_sig,_alpha,_rhos ->plugin(_name,_n,_A2P,_A3),_sigP,_alphaP,_rhosP 
+-plugin1 _A,_sig,_alpha,_rhos -> _AP ,_sigP,_alphaP,_rhosP --- plugin(_name,_A,_A2,_A3),_sig,_alpha,_rhos ->plugin(_name,_AP,_A2,_A3),_sigP,_alphaP,_rhosP 
+
+-plugin _n |> __int32(_) _n2 |> __int32(_) _n3 |> __int32(_) _n4 |> __int32(_)---   plugin(_name,_n,_n2,_n3,_n4) ,_sig,_alpha,_rhos  -> __plugin(_name ,_n,_n2,_n3,_n4),_sig,_alpha,_rhos 
+-plugin4 _n |> __int32(_) _n2|> __int32(_) _n3 |> __int32(_) _A4,_sig,_alpha,_rhos -> _A4P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_n2,_n3,_A4),_sig,_alpha,_rhos ->plugin(_name,_n,_n2,_n3,_A4P),_sigP,_alphaP,_rhosP 
+-plugin3 _n |> __int32(_) _n2|> __int32(_) _A3,_sig,_alpha,_rhos -> _A3P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_n2,_A3,_A4),_sig,_alpha,_rhos ->plugin(_name,_n,_n2,_A3P,_A4),_sigP,_alphaP,_rhosP 
+-plugin2 _n |> __int32(_) _A2,_sig,_alpha,_rhos -> _A2P,_sigP,_alphaP,_rhosP  --- plugin(_name,_n,_A2,_A3,_A4),_sig,_alpha,_rhos ->plugin(_name,_n,_A2P,_A3,_A4),_sigP,_alphaP,_rhosP 
+-plugin1 _A,_sig,_alpha,_rhos -> _AP ,_sigP,_alphaP,_rhosP --- plugin(_name,_A,_A2,_A3,_A4),_sig,_alpha,_rhos ->plugin(_name,_AP,_A2,_A3,_A4),_sigP,_alphaP,_rhosP 
+
+
+
+
+
+-cylinder   --- cylinder(_A,_A2),_sig,_alpha,_rhos -> __plugin("cylinder", _A,_A2),_sig,_alpha,_rhos
+-sphere   --- sphere(_A),_sig,_alpha,_rhos -> __plugin("sphere", _A),_sig,_alpha,_rhos
+-cube   --- cube(_A,_A2,_A3),_sig,_alpha,_rhos -> plugin("cube", _A,_A2,_A3),_sig,_alpha,_rhos
+
+-move   --- move(_A,_A2,_A3),_sig,_alpha,_rhos -> plugin("move", _A,_A2,_A3),_sig,_alpha,_rhos
+-scale   --- scale(_A,_A2,_A3),_sig,_alpha,_rhos -> plugin("scale", _A,_A2,_A3),_sig,_alpha,_rhos
+-rotate   --- rotate(_A,_A2),_sig,_alpha,_rhos -> plugin("rotate", _A,_A2),_sig,_alpha,_rhos
+
+-colour   --- colour(_A,_A2,_A3),_sig,_alpha,_rhos -> plugin("colour", _A,_A2,_A3),_sig,_alpha,_rhos
+
+
+-pop   --- pop(),_sig,_alpha,_rhos -> plugin("pop"),_sig,_alpha,_rhos
+
+
+
+
+
+
+
+
+
+
+                                              (*  CFG rules *)
+
+///setup rule here 
+
+init  ::= setup^^
+seq ::= statement^^ | statement seq 
+statement ::= '!'^  sideEffect^^  '!'^ | '('^  controlFlow^^  ')'^  |'|'^ loop^^ '|'^ | '('^ pluginOpp^^ ')'^ | scope^^ | '('^ arithmetic ^^  ')'^ | '('^ index^^  ')'^
+expressions ::= expression | expression  expressions^ 
+expression  ::= rels^^   
+
+
+
+
+arithmetic ::=  plusPlus^^  |  minusMinus^^ 
+sideEffect::=  assign^^  |  output^^ 
+
+controlFlow ::=  if^^  |  switch^^   |  tryCatch^^  | tryCatchFinally^^  |    break^^ | error^^
+loop ::=   while^^  |  for^^  |  map^^ 
+pluginOpp ::=   plugin^^ |   sphere^^  | cube^^ | cylinder^^ | pop^^ | move^^ | rotate^^ | colour^^ | scale^^
+scope ::=   ':'^ defun^^ | '['^ let^^ ']'^ | '['^ func^^ ']'^  |'['^ funcall^^ ']'^   | return^^
+
+for ::= 'for'^  '!'^ assign  '!'^  comp '('^ arithmetic ')'^ seq 
+while ::= 'while'^ expression  seq  
+if ::= 'if'^ expression  seq  | 'if'^ expression '('^ seq ')'^  '('^ seq')'^
+map ::= 'map'^ lambda '('^ __list ')'^
+
+assign ::=  ':='^ &ID  expression 
+output ::= 'print'^  expression 
+
+index ::= 'index'^  expression   expression
+index ::= 'index'^  list  expression
+list ::= '('^ 'list'^ __list^^ ')'^
+
+setup ::=  seq
+let ::= 'let'^ '('^ seq ')'^ seq 
+defun ::= &ID '['^ '('^ __list ')'^  seq ']'^
+funcall ::= 'funcall'^ lambda  __list 
+lambda ::=  '('^ '\'^ '('^ __list ')'^ seq ')'^
+func ::= 'func'^ &ID  __list
+func ::= 'func'^ &ID  statement
+return ::= '('^ 'return'^ expression ')'^
+
+switch ::= 'switch'^  expression  case 
+case ::= '('^ 'case'^ expression seq ')'^ case | '('^ 'case'^ expression seq ')'^  
+break ::= 'break'^ 
+tryCatch ::=  'try'^ seq '('^ 'catch'^ seq  ')'^
+tryCatchFinally ::= 'try'^  seq  '('^ 'catch'^ seq ')'^ '('^  'end'^ seq ')'^
+error ::=  'error'^ 
+
+plusPlus ::=  '++'^ &ID
+minusMinus ::=  '--'^ &ID
+
+__list ::= __l
+__l ::=  listvals | listvals  __l
+listvals ::= __int32^^  | __string^^ |__bool^^ | plugin^^ | &ID^^  
+
+
+move ::= 'move'^ expressions^
+scale ::= 'scale'^ expressions^
+rotate ::= 'rotate'^ expressions^
+
+colour ::= 'colour'^ expressions^
+
+sphere ::= 'sphere'^ expressions^
+cube ::= 'cube'^ expressions^
+cylinder ::= 'cylinder'^ expressions^
+
+pop ::= 'pop'^
+plugin ::= 'plugin'^  expressions^ 
+
+
+
+
+
+
+
+rels ::=  adds^^  | comp^^
+
+comp ::=   gt^^ | lt^^ | ne^^ | eq^^ | and^^ | or^^ | not^^ | __bool^^ 
+
+and ::= '('^ 'and'^ comp  comp ')'^
+or ::= '('^ 'or'^ comp  comp ')'^
+not ::= '('^ 'not'^ comp  comp ')'^ 
+
+gt ::= '('^ '>'^ adds  adds ')'^
+lt ::= '('^ '<'^ adds  adds ')'^
+ne ::= '('^ '/='^ adds  adds ')'^
+eq ::= '('^ '='^ adds  adds ')'^
+
+
+adds  ::=  operand^^ | sub^^ | add^^ |mul^^ | div^^ | exp^^ |mod^^
+add ::= '('^ '+'^ adds  adds ')'^ 
+mul ::= '('^ '*'^ adds  adds ')'^
+div ::= '('^ '/'^ adds  adds ')'^
+sub ::= '('^ '-'^ adds adds ')'^
+exp ::= '('^ '**'^ adds  adds ')'^
+mod ::= '('^ '%'^ adds  adds ')'^
+
+
+operand ::= __int32^^ | deref^^ | __string^^ |__bool^^ | plugin^^
+
+
+__int32 ::= &INTEGER
+deref   ::= &ID
+__string::= &STRING_SQ
+__bool ::= 'true' | 'false'
+
+
+
+
+
+(* plugin demonstrations (seperate)*)
+
+// !try 
+//   "(plugin 'init')
+//      : object [(x y)
+//            (sphere 15)
+//            (colour 1 1 0)
+//            (move 0 0 20)
+//            (cylinder 8 20)
+//            (move 0 0 (- 0 10 ))
+//            (cylinder 10 6)
+//            (rotate 'x' 90)
+//            (colour 0 1 0)
+//            (move 0 0 y)
+//            (pop)]
+//      [func object  2 100]"
+
+// !try
+// "(plugin 'init')
+// (cube 10 20 30)
+// |for !:= i 0! (/= i 3) (++ i) 
+//       (sphere 5) (cylinder 20 20)  
+//        (move  (* i 40) 0 0)
+//        (colour (% i 2) 0 0)
+//        (pop) |"
+
+
+
+   (* external syntax examples *)
+// ////////tests - takes a while
+
+//todo - minus numbers add 
+
+// !try "(if (and (> 2 1) true)   (!print 2!) (!print 3!))"                     = __done, {=},[2],[{=}] 
+// !try "!:= x 2! (++ x)"                                               = __done, {0=2, 1=3},[],[{x=1}]
+// !try "!:= x 2! (-- x) !print x!"                                  = __done, {0=2, 1=1},[1],[{x=1}]
+
+// !try "!:= x 4!  |while (> x 1)  (-- x) !print 2!|"                = __done, {0=4,1=3,2=2,3=1},[2,2,2],[{x=3}]
+
+// !try "(index  ( list 1 2 3 4 ) 2)"                = 3, {=},[],[{=}]
+
+// !try "|for !:= i 6! (/= i 4) (-- i) 
+//        !print i!|"                                                        = __done, {0=6, 1=5, 2=4}, [5, 6], [{=}]
+
+
+
+// !try "[let (!:= a 3! !:= b 4!) !print a! !print b!]"              = __done, {0=3, 1=4},[4,3],[{=}]
+
+// !try "(switch 3 (case 3  !print 4!)
+//                (case 2 !print 5!
+//                        (break)))"                                           = __done, {=},[4],[{=}]
+// !try "(try
+//       (if (< 1 2)
+//           (error))
+//       (catch
+//           !print 'error'!)
+//       (end
+//           !print 'resolve'!))"                                               = __done, {=},["resolve","error"],[{=}]
+
+
+// !try "
+//      : double [(x) !print (* x 2)!]                               
+//      [func double 2]"                                               = __done,{0=[lambda([x], output(mul(deref(x), 2)))],1=2},[4],[{double=0}]
+     
+
+// !try "[funcall (\ (x y) !print (+ x y)!) 2 3] "                = __done, {0=2,1=3},[5],[{=}]
+
+// !try "|map (\ (x) (return (* (+ x 1) 2))) (1 2 3 4 5)|"      = [4,6,8,10,12], {0=1,1=2,2=3,3=4,4=5},[],[{=}]
+
+
+
+   (* internal syntax tests *)
+
+
+// ////loop tests
+// !try setup(seq(assign(a,6), seq(assign(b,9), seq(while(ne(deref(a), deref(b)), if(gt(deref(a), deref(b)), assign(a, sub(deref(a), deref(b))), assign(b, sub(deref(b), deref(a))))),output(deref(a)))))), __map, __list,__list = __done, {0=6, 1=9, 2=3, 3=3}, [3], [{a=3, b=2}]
+// !try setup(seq(assign(i,6),while(ne(deref(i),4), seq(output(deref(i)),assign(i,sub(deref(i),1)))))) ,__map,__list,__list = __done, {0=6, 1=5, 2=4}, [5, 6], [{i=2}]
+// // !try setup(for(assign(i,6),ne(deref(i),4),minusMinus(i), output(deref(i)))), __map, __list,__list  = __done, {0=6, 1=5, 2=4}, [5, 6], [{=}]
+// !try setup(seq(assign(i,100),seq(for(assign(i,6),ne(deref(i),4),minusMinus(i), output(deref(i))),output(deref(i))))), __map, __list,__list  = __done, {0=100, 1=6, 2=5, 3=4}, [100,5, 6], [{i=0}]
+
+// //case tests
+
+// !try setup(seq(assign(a,5),seq(switch(2,case(2,switch(deref(a),case(5,output(22))),case(2,output(222)))), output(2222)))) ,__map,__list,__list  = __done, {0=5}, [2222, 222, 22], [{a=0}]
+// !try setup(seq(assign(a,4),switch(deref(a),case(4,output(2),case(4,break(),case(4,output(5))))))) ,__map,__list,__list  = __done, {0=4}, [2], [{a=0}]//break     
+// !try setup(seq(assign(a,4),switch(deref(a),case(4,output(2),case(4,output(3),case(4,output(5))))))) ,__map,__list,__list = __done, {0=4}, [5, 3, 2], [{a=0}] //non break     
+// !try setup(seq(switch(2,case(2,output(22),case(2,output(222)))), output(2222))) ,__map,__list,__list = __done, {=}, [2222, 222, 22], [{=}] //if multiple are correct
+// !try setup(seq(seq(assign(a,4),switch(deref(a),case(2,assign(a,5),case(4,assign(a,3333))))), output(deref(a)))) ,__map,__list,__list = __done, {0=4, 1=3333}, [3333], [{a=1}]
+// !try setup(seq(assign(a,6),switch(deref(a),case(2,assign(a,5),case(4,assign(a,3))))))   ,__map,__list,__list =__done, {0=6}, [], [{a=0}]         
+// !try setup(seq(assign(a,4),switch(deref(a),case(4,output(2),case(4,seq(if(le(2,3),break(),__done),if(le(5,3),break(),__done)),case(4,output(5))))))) ,__map,__list,__list  = __done, {0=4}, [2], [{a=0}]// for breaks in ifs
+
+
+// //if tests
+// !try setup(if(ne(1,2), output(1),output(2))) ,__map,__list,__list = __done, {=}, [1], [{=}]
+
+// //trycatch tests
+// !try setup(tryCatch(if(le(1,2),error(),__done),output("error"))) ,__map,__list,__list  = __done, {=}, ["error"], [{=}]
+// !try setup(tryCatch(if(le(3,2),error(),__done),output("error"))) ,__map,__list,__list  = __done, {=}, [], [{=}]
+// !try setup(tryCatchFinally(if(le(3,2),error(),__done),output("error"),output("end"))) ,__map,__list,__list  = __done, {=}, ["end"], [{=}]
+// !try setup(tryCatchFinally(if(le(1,2),error(),__done),output("error"),output("end"))) ,__map,__list,__list  = __done, {=}, ["end", "error"], [{=}]
+// !try setup(tryCatch(seq(if(le(2,3),error(),__done), if(le(5,2),error(),__done)       ),output("error"))) ,__map,__list,__list  = __done, {=}, ["error"], [{=}]
+   
+
+
+// //operation tests
+// !try  add(2,add(3,2)) ,__map,__list,__list   =7, {=}, [], []
+// !try add(1,2), __map,__list,__list   = 3, {=}, [], []
+// !try add(1.5,2.5), __map,__list,__list  = 4.0, {=}, [], [] //floats
+
+
+// //and/or/not tests
+// !try and(true,false), __map,__list,__list = false, {=}, [], []
+// !try and(true,true), __map,__list,__list = true, {=}, [], []
+// !try and(true,false), __map,__list ,__list = false, {=}, [], []
+// !try and(false,false), __map,__list,__list = false, {=}, [], []
+// !try and(1,1), __map,__list ,__list = true, {=}, [], []
+// !try and(2,2), __map,__list ,__list =  true, {=}, [], []
+// !try and(1,0), __map,__list,__list =  false, {=}, [], []
+// !try and(and(0,1),and(1,1))  , __map,__list,__list =  false, {=}, [], []
+// !try and(and(true,true),true), __map,__list  , __list =  true, {=}, [], []
+// !try and(and(true,true),and(false,and(false,true))), __map,__list,__list =  false, {=}, [], []
+
+// !try not(0), __map,__list ,__list     =  true, {=}, [], []
+// !try not(2), __map,__list ,__list =  false, {=}, [], []
+// !try not(not(not(0))), __map,__list ,__list =  true, {=}, [], []
+// !try not(true), __map,__list ,__list = false, {=}, [], []
+// !try not(false), __map,__list,__list   = true, {=}, [], []
+// !try not(not(not(true))), __map,__list ,__list =  false, {=}, [], []
+// !try not(not(not(not(false)))), __map,__list,__list  =  false, {=}, [], []
+
+
+// !try or(true,false), __map,__list,__list = true, {=}, [], []
+// !try or(true,true), __map,__list,__list = true, {=}, [], []
+// !try or(true,false), __map,__list ,__list = true, {=}, [], []
+// !try or(false,false), __map,__list,__list = false, {=}, [], []
+// !try or(1,1), __map,__list ,__list = true, {=}, [], []
+// !try or(2,2), __map,__list ,__list =  true, {=}, [], []
+// !try or(1,0), __map,__list,__list =  true, {=}, [], []
+// !try or(0,0), __map,__list,__list =  false, {=}, [], []
+// !try or(or(0,1),or(1,1))  , __map,__list,__list =  true, {=}, [], []
+// !try or(or(true,true),true), __map,__list  , __list =  true, {=}, [], []
+// !try or(or(true,true),or(false,or(false,true))), __map,__list,__list =  true, {=}, [], []
+
+
+
+// //is tests
+// !try isInt(2), __map,__list,__list = true, {=}, [], []
+// !try isInt(2.5), __map,__list,__list = false, {=}, [], []
+// !try isInt("test"), __map,__list,__list = false, {=}, [], []
+// !try isInt(true), __map,__list,__list = false, {=}, [], []
+// !try isInt(and(true,and(false,true))) , __map,__list,__list= false, {=}, [], []
+// !try isInt(add(2,add(3,4))), __map,__list,__list = true, {=}, [], []
+
+// !try isBool(2), __map,__list,__list = false, {=}, [], []
+// !try isBool(2.5), __map,__list, __list = false, {=}, [], []
+// !try isBool("test"), __map,__list,__list= false, {=}, [], []
+// !try isBool(true), __map,__list,__list = true, {=}, [], []
+// !try isBool(add(2,add(3,4))), __map,__list,__list = false, {=}, [], []
+// !try isBool(and(true,and(false,true))) , __map,__list,__list = true, {=}, [], []
+
+// !try isEmpty(2), __map,__list,__list = false, {=}, [], []
+// !try isEmpty(add(2,add(3,4))), __map,__list,__list= false, {=}, [], []
+// !try isEmpty("test")      , __map,__list,__list   = false, {=}, [], []
+// !try isEmpty(__empty)     , __map,__list,__list   = true, {=}, [], []   
+
+
+// //unitary operators tests
+// !try setup(seq(assign(a,6),seq(plusPlus(a),output(deref(a))))),__map,__list,__list = __done, {0=6, 1=7}, [7], [{a=1}]
+// !try setup(seq(assign(a,6),seq(minusMinus(a),output(deref(a))))),__map,__list,__list = __done, {0=6, 1=5}, [5], [{a=1}]
+
+
+
+// //global funcstests
+
+// !try setup(seq(assignGlobal(x,2),output(deref(x)))),__map,__list,__list  = __done, {0=2}, [2], [{x=0}]
+// !try setup(seq(assignGlobal(y,3),seq(let(assign(x,2),seq(output(deref(x)),output(deref(y)))),output(deref(y))))),__map,__list,__list = __done, {0=3, 1=2}, [3, 3, 2], [{y=0}]
+
+
+
+// // // func tests
+// !try setup(defun(test,[X],output(X))),__map,__list,__list = __done, {0=[lambda([X], output(X))]}, [], [{test=0}]
+// !try setup(seq(defun(test,[X],output(X)),deref(test))),__map,__list,__list   = [lambda([X], output(X))], {0=[lambda([X], output(X))]}, [], [{test=0}]
+// !try setup(seq(defun(test,[X],seq(output(deref(X)),__done)),func(test,[0]))),__map,__list,__list =__done, {0=[lambda([X], seq(output(deref(X)), __done))], 1=0}, [0], [{test=0}]
+// !try setup(seq(defun(double,[X],return(add(deref(X),deref(X)))),output(func(double,[2])))),__map,__list,__list   = __done, {0=[lambda([X], return(add(deref(X), deref(X))))], 1=2}, [4], [{double=0}]
+// !try setup(seq(defun(double,[x,y],output(add(deref(x),deref(y)))),func(double,[2,3]))),__map,__list,__list  = __done, {0=[lambda([x, y], output(add(deref(x), deref(y))))], 1=2, 2=3}, [5], [{double=0}]
+// !try setup(seq(defun(double,[X],return(add(deref(X),deref(X)))),output(add(func(double,[2]),func(double,[2]))))),__map,__list,__list =__done, {0=[lambda([X], return(add(deref(X), deref(X))))], 1=2, 2=2}, [8], [{double=0}]
+// !try setup(seq(defun(empty,[],output(2)),func(empty))), __map,__list,__list    =__done, {0=[lambda([], output(2))]}, [2], []
+
+
+// ////lambda tests
+// !try setup(funcall(lambda([x,y],output(add(deref(x),deref(y)))),[2,3])), __map,__list,__list   = __done, {0=2, 1=3}, [5], [{=}]
+// !try setup(funcall(lambda([x,y],return(add(deref(x),2))),[2,3])), __map,__list,__list   =4, {0=2, 1=3}, [], [{=}]
+// !try setup(funcall(lambda([],output(2)))), __map,__list,__list  =__done, {=}, [2], []
+
+
+
+// ////let tests
+// !try setup(seq(assign(a,3), seq(output(let(assign(a,2),return(deref(a)))),__done))) , __map,__list,__list = __done, {0=3, 1=2}, [2], [{a=0}]
+// !try setup(seq(assign(a,3), seq(let(seq(assign(a,2),seq(assign(b,4),__done)),output(deref(a))),output(deref(a))))) , __map,__list,__list = __done, {0=3, 1=2, 2=4}, [3, 2], [{a=0}]
+// !try setup(seq(assign(a,3), seq(let(seq(assign(a,2),seq(assign(b,4),__done)),seq(output(deref(a)),__done)),output(deref(a))))) , __map,__list,__list = __done, {0=3, 1=2, 2=4}, [3, 2], [{a=0}]
+// !try setup(seq(assign(a,3), seq(let(seq(assign(a,2),__done),output(deref(a))),output(deref(a))))) , __map,__list,__list =  __done, {0=3, 1=2}, [3, 2], [{a=0}]
+// !try setup(seq(assign(a,3),seq(let(seq(assign(a,2), seq(assign(b,4),__done)), seq(let(seq(assign(a,1),__done), seq(output(deref(a)),__done)), output(deref(a)))), output(deref(a))))), __map,__list,__list= __done, {0=3, 1=2, 2=4, 3=1}, [3, 2, 1], [{a=0}] //nested lets
+
+
+
+// //map tests
+// !try setup(map(lambda([X],return(add(deref(X),1))),[1,2,5])), __map,__list,__list= [2, 3, 6], {0=1, 1=2, 2=5}, [], [{=}]
+// !try setup(map(lambda([X],return(add(deref(X),1))),[])), __map,__list,__list = [], {=}, [], [{=}]
+// !try setup(map(lambda([X],return(mul(deref(X),10))),[1,2,5,2,1])), __map,__list,__list = [10, 20, 50, 20, 10], {0=1, 1=2, 2=5, 3=2, 4=1}, [], [{=}]
+
+
+// // output test
+// !try  output(add(2,add(3,4))), __map,__list,__list = __done, {=}, [9], []
+// !try  output("test"), __map,__list,__list = __done, {=}, ["test"], []
+
+
+
+
+// // assign and deref tests
+// // todo - asign variables to variables
+// !try setup(seq(assign(x,2),seq(assign(t,3),seq(assign(y,4),add(deref(y),1))))),__map,__list,__list = 5, {0=2, 1=3, 2=4}, [], [{x=0, t=1, y=2}]
+// !try seq(assign(x,2),seq(assign(t,3),seq(assign(y,4),deref(z)))), {5=2,6=3},__list,[{z=6},{w=5},{=}] = 3, {5=2, 6=3, 2=2, 3=3, 4=4}, [], [{z=6}, {w=5}, {x=2, t=3, y=4}] // stack 0
+// !try seq(assign(x,2),deref(x)), __map,__list,[{1=2},{4=5},{3=5}] = 2, {0=2}, [], [{1=2}, {4=5}, {3=5, x=0}]
+// !try setup(assign(x,2)), __map,__list,__list = __done, {0=2}, [], [{x=0}]
+// !try seq(assign(x,2),seq(assign(t,3),assign(y,4))), __map,__list,[{1=2},{4=5},{=}] = __done, {0=2, 1=3, 2=4}, [], [{1=2}, {4=5}, {x=0, t=1, y=2}]
+// !try seq(assign(x,2),output(deref(x))), __map,__list,[{=}] = __done, {0=2}, [2], [{x=0}]
+// !try seq(assign(x,2),seq(assign(y,3),output(deref(x)))) , __map,__list,[{=}] = __done, {0=2, 1=3}, [2], [{x=0, y=1}]
+// !try seq(assign(x,2),seq(assign(x,3),deref(x))) , __map,__list,[{=}] = 3, {0=2, 1=3}, [], [{x=1}]
+
+
+// // operation tests
+// !try mul(mul(5,2),mul(3,2)),__map,__list,__list  = 60, {=}, [], []   
+// !try div(div(20,2),div(10,1)),__map,__list,__list = 1, {=}, [], [] 
+// !try sub(sub(4,2),sub(10,2)),__map,__list,__list = -6, {=}, [], [] 
+// !try add(add(2,7),add(1,8)),__map,__list,__list = 18, {=}, [], [] 
+// !try gt(add(10,2),sub(20,2)),__map,__list,__list = false, {=}, [], []
+// !try lt(add(10,2),sub(20,2)),__map,__list,__list = true, {=}, [], [] 
+// !try  gt(mul(sub(7,3),2), add(3,add(4,5))) ,__map,__list,__list = false, {=}, [], [] 
+// !try eq(mul(5,2),div(20,2)),__map,__list,__list = true, {=}, [], [] 
+// !try ne(mul(5,2),div(20,2)),__map,__list,__list = false, {=}, [], []
+
+// //////index tests
+// !try index([1,2,3,4],2), __list,__list,__map = 3, __list, __list, {=}
+// !try setup(seq(assign(x,[2,3,4]),index(deref(x),2))), __list,__list,__map  
+// !try setup(seq(assign(x,map(lambda([X],return(mul(deref(X),10))),[1,2,5,2,1])),index(deref(x),2))), __list,__list,__map
+
+
+
+
+
+
+
+
+/// plugin tests -   need to be done individually
+// !try plugin("init") ,__map,__list,__list
+// !try seq(plugin("init"),seq(cube(1,1,1),scale(50,50,50))) ,__map,__list,__list = __done, {=}, __list, __list
+// !try seq(plugin("init"),seq(cylinder(50,20),rotate("x",30))) ,__map,__list,__list = __done, {=}, __list, __list
+// !try seq(plugin("init"),seq(sphere(50),move(100, 20, 100))) ,__map,__list,__list =__done, {=}, __list, __list
+// !try seq(plugin("init"),seq(sphere(50),colour(1,0,0))) ,__map,__list,__list= __done, {=}, __list, __list
+// !try seq(plugin("init"),seq(cube(1,1,1),seq(scale(50,50,50),seq(move(100,100,100),seq(pop,cube(20,20,20)))))) ,__map,__list,__list = __done, {=}, __list, __list
+// !try seq(plugin("init"),let(seq(assign(x,50),seq(assign(y,50),assign(z,50))),cube(deref(x),deref(y),deref(z)))) ,__map,__list,__list
+
+// !try "(plugin 'init') (cube 1 1 1) (scale 50 50 50)"
+// !try "(plugin 'init') (cylinder 50 20) (rotate 'x' 30)"
+// !try "(plugin 'init') (sphere 50 20) (move 100 20 100)"
+// !try "(plugin 'init') (sphere 50 20) (colour 0 1 0)"
+// !try "(plugin 'init') (cube 1 1 1) (scale  50  50 50) (colour 0 1 0) (pop) (cube 10 10 10)"
+// !try "(plugin 'init') (cylinder 50 20) (rotate 'x' 30)"
+

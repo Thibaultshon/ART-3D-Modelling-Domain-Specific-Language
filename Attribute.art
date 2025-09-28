@@ -1,0 +1,638 @@
+(* gcdAttribute.art GCD in attribute-actions with native Java actions - 5 CFG phrase level rules and 3 CFG lexical rules*)
+(* Use ofplugin in expressions requires return result that can be cast to int *)
+// !interpreter attributeAction
+!support
+!! import java.util.Map; import java.util.HashMap;import java.util.List;import java.util.ArrayList;
+
+
+!!
+!!  Hmap<String,Object> variables= new Hmap<>(new Hmap());
+    ArrayList<LambdaContainer> callStack = new ArrayList<>();
+    
+   public class Hmap<K,V> extends HashMap<K,V> {
+     private Hmap<K,V> parent;
+     public Hmap(Hmap<K,V> parent){
+     this.parent = parent;
+      }
+     public Hmap(){
+     this.parent = null;
+      }
+
+     @Override 
+     public V get(Object key){
+       V res = super.get(key);
+       if (res == null && parent != null){
+           return parent.get(key);
+        }
+       return res;
+     }
+
+     public Hmap<K,V> oldScope(){ return parent; }
+     public Hmap<K,V> newScope() { return new Hmap<>(this);}
+     public Hmap<K,V> newScope( Hmap<K,V> link) { return new Hmap<>(link);}
+     }
+
+
+
+     
+     public class LambdaContainer { 
+      private ArrayList<String> params;
+      private AbstractAttributeBlock function;
+      private Object returnVal = 0;
+      private Hmap<String,Object>  environment = null;
+       public LambdaContainer(  ArrayList<String> params,  AbstractAttributeBlock function,Hmap<String,Object> environment){
+         this.params = params;
+         this.function = function;
+         this.environment  = environment;
+      }
+      ArrayList<String> getParams(){ return this.params;}
+      AbstractAttributeBlock getFunction(){return this.function;}
+      void setReturnVal(Object newReturnVal){this.returnVal = newReturnVal;}
+      Object  getReturnVal(){return this.returnVal;}
+      Hmap<String,Object>   getCapturedEnviornment(){return this.environment;}
+      void setCapturedEnviornment(Hmap<String,Object> newEnvironment){this.environment=newEnvironment;}
+      }
+
+      Object resolveVariable(Object val) {
+       for(Object res= variables.get(val); res != null; res= variables.get(res)){
+           val = res;
+         }
+        return val;
+       }
+
+
+ 
+     int globalSuccessCount = 0;
+     int globalFailCount = 0;
+     
+!!
+
+withTest ::= withInit
+!!  System.out.println("\nTotal Fails: " + globalFailCount + " Total Successes: "+ globalSuccessCount);!!
+| withInit  '==' e0
+!!
+  if(e01.v.equals(withInit1.v)){
+      globalSuccessCount+=1;
+      System.out.println("\nTest Successfull");
+    }else{
+      globalFailCount+=1;
+      System.out.println("\nTest failed");
+      System.out.println("\ngot " + withInit1.v + " instead of " + e01.v);
+    }
+ 
+ System.out.println("\nTotal Fails: " + globalFailCount + " Total Successes: "+ globalSuccessCount);!!
+
+  
+
+withInit<v:Object>  ::=
+!! variables = new Hmap<>(); callStack= new ArrayList<>();!!
+statements
+!! withInit.v = statements1.v;  System.out.println("Final variable map " + variables); !!
+
+
+statements  <v:Object> ::= statement statements  !! statements.v = statements1.v;!!        
+| statement !! statements.v = statement1.v;!!
+
+statement <v:Object>  ::= 
+  e0!< !! interpret(e01);statement.v = e01.v;!!
+
+functions <v:Object>  ::=
+':=' ID  e0  !! variables.put((String)ID1.v,e01.v); !!
+
+| 'return' e0  statements!< !! callStack.get(0).setReturnVal(e01.v); !!
+
+
+| 'return'  e0 !!    callStack.get(0).setReturnVal(e01.v);!!
+
+
+|  'if' e0  statements!<  '(' 'else'  statements!< ')'                 // if statement 
+  !!
+     if ((int)e01.v != 0) {
+     interpret(statements1); functions.v = statements1.v;}
+     else {interpret(statements2); functions.v = statements2.v;}!!
+
+
+|  'if' e0  statements!<  
+  !!
+     if ((int)e01.v != 0) {
+     interpret(statements1); functions.v = statements1.v;} !!
+
+  
+|  'while'   e0!<  '(' statement!< ')'                      // while statement 
+  !! interpret(e01); while ((int)e01.v != 0) { interpret(statement1); interpret(e01); } !!                 
+
+|  'for' !! variables = variables.newScope();!!  statement e0!<  statement!<  statements!<  
+!!   interpret(e01); while ((int)e01.v != 0) { interpret(statements1); interpret(statement2); interpret(e01);   } variables = variables.oldScope();!! 
+
+|  '++'  ID 
+  !! {int res = (int)variables.get(ID1.v) + 1; variables.put((String)ID1.v,res); functions.v = res; } !!
+
+| '--' ID 
+  !!   {int res = (int)variables.get(ID1.v) - 1; variables.put((String)ID1.v,res); functions.v = res; }  !!
+
+
+| 'switch' e0 !! switchCase1.v = e01.v;!! switchCase !! functions.v = switchCase1.v; !! //not complete
+
+| 'try' tryCatch '(' 'catch' statements!<  ')'  //not complete
+!!  {if ((int)tryCatch1.v !=0) {interpret(statements1);}}!!
+
+
+| 'print'  printElements                   (* print statement *)
+
+
+|'let' !!  variables = variables.newScope(); !! '(' statements ')' statements !! variables = variables.oldScope(); !!  
+
+
+|'funcall'  e0  list 
+!!
+
+{LambdaContainer lambda = (LambdaContainer) e01.v;
+  Hmap<String,Object>  tempVariables = variables; 
+  variables = lambda.getCapturedEnviornment();
+  for (int i =0; i < list1.v.size();i++){
+       Object val = resolveVariable(list1.v.get(i));
+       variables.put((String)lambda.getParams().get(i),val);
+   }
+   callStack.add(0,lambda);
+   interpret(lambda.getFunction());
+   callStack.remove(0);
+   functions.v = lambda.getReturnVal();
+   variables = tempVariables;
+    }
+       
+   !!
+
+
+| !! !! 'defun' ID  lambdaObj  !!
+  variables.put((String)ID1.v, lambdaObj1.v);
+    ;
+!!
+
+|  'assert' e0 !!
+
+  if((int)e01.v != 0){
+    globalSuccessCount+=1;
+    System.out.println("\nTest Successfull");
+   }else{
+    globalFailCount+=1;
+    System.out.println("\nTest failed");
+   }
+
+
+  
+!!
+
+| 'list' list !! functions.v = list1.v;!!
+| 'index' e0  e0 !!functions.v = ((ArrayList)e01.v).get((int)e02.v);!!
+| lambda !! functions.v = lambda1.v;!!
+
+
+|  ID list  
+!!
+{LambdaContainer lambda;
+   for(lambda= (LambdaContainer)variables.get(ID1.v)  ; variables.get(lambda) != null; lambda=   (LambdaContainer) variables.get(lambda)){}
+    Hmap<String,Object>  tempVariables = variables;   
+    // lambda.setCapturedEnviornment(  variables.newScope());
+    variables = lambda.getCapturedEnviornment();
+   for(int i =0; i < list1.v.size();i++){
+          variables = variables.newScope();
+      Object val = resolveVariable(list1.v.get(i));
+      variables.put((String)lambda.getParams().get(i),val);
+    }
+    callStack.add(0,lambda);
+    interpret(lambda.getFunction());
+    callStack.remove(0);
+    functions.v = lambda.getReturnVal();
+    variables = tempVariables;}
+
+   !!
+
+
+|  'map'  '(' lambda ')'   list  
+!!{
+
+   ArrayList<Object> finalRes = new ArrayList<>();
+   LambdaContainer lambda = (LambdaContainer) lambda1.v;
+   Hmap<String,Object>  tempVariables = variables; 
+   variables = lambda.getCapturedEnviornment();
+   for (int i =0; i < list1.v.size();i++){
+       variables = variables.newScope();
+       Object val = resolveVariable(list1.v.get(i));
+       variables.put((String)lambda.getParams().get(0),val);
+       callStack.add(0,lambda);
+       interpret(lambda.getFunction());
+       callStack.remove(0);
+       finalRes.add(lambda.getReturnVal());
+    }
+    functions.v = finalRes;
+    }!!
+
+
+
+| 'plugin'  STRING_SQ !! functions.v = plugin(STRING_SQ1.v);   !!
+|'plugin'  STRING_SQ  e0  !! functions.v =  plugin(STRING_SQ1.v, e01.v); !!
+| 'plugin'  STRING_SQ  e0  e0 !! functions.v = plugin(STRING_SQ1.v, e01.v, e02.v); !!
+|'plugin'  STRING_SQ   e0  e0  e0  !! functions.v = plugin(STRING_SQ1.v, e01.v, e02.v, e03.v); !!
+|'cube'   e0  e0  e0  !! functions.v = plugin("cube", e01.v, e02.v, e03.v); !!
+|'cylinder'   e0  e0   !! functions.v = plugin("cylinder", e01.v, e02.v); !!
+|'sphere'   e0    !! functions.v = plugin("sphere", e01.v); !!
+|'move'   e0  e0  e0  !! functions.v = plugin("move", e01.v, e02.v, e03.v); !!
+|'colour'   e0  e0  e0  !! functions.v = plugin("colour", e01.v, e02.v, e03.v); !!
+|'scale'   e0  e0  e0  !! functions.v = plugin("scale", e01.v, e02.v, e03.v); !!
+|'rotate'   STRING_SQ  e0    !! functions.v = plugin("rotate", STRING_SQ1.v ,e01.v); !!
+|'pop'   !! functions.v = plugin("pop"); !!
+
+
+
+
+
+printElements  ::= 
+STRING_SQ !! System.out.print(STRING_SQ1.v + "\n"); !! 
+| e0 !! System.out.print(e01.v + "\n");!! 
+
+
+tryCatch <v:int>  ::= // won't work for inner cases
+statement tryCatch !! tryCatch.v = (int)tryCatch1.v + (int)tryCatch.v;!!   
+| '(' 'error' ')' !! tryCatch.v = 1;!! tryCatch!< | #
+
+switchCase  <v:Object> ::=        
+'(' 'case' e0  statements!< ')' // won't work for inner cases
+!!if(e01.v ==  switchCase.v){interpret(statements1);} switchCase1.v = switchCase.v; !! switchCase 
+|'(' 'case' e0  statements '(' 'break' ')' statements!<')'  switchCase!< 
+|'(' 'case' e0  statements '(' 'break' ')'')'  switchCase!< 
+|'(' 'case' e0  statement'(' 'break' ')'')'  switchCase!< 
+|'(' 'case' e0  statement'(' 'break' ')' statement!< ')'  switchCase!< 
+|'(' 'case' e0   '(' 'break' ')'')'  switchCase!<  
+| #
+
+
+
+
+lambdaObj<v:LambdaContainer > ::= '(' paramList ')' statements!<
+!! lambdaObj.v= new LambdaContainer(paramList1.v,statements1,variables); !! 
+
+lambda<v:LambdaContainer> ::=  'lambda'   lambdaObj  !! lambda.v =lambdaObj1.v;!!
+
+list<v:ArrayList>  ::= !! ListIn1.v = new ArrayList();!!  ListIn !! list.v = ListIn1.v;!! 
+ListIn<v:ArrayList>  ::=
+STRING_SQ !!  ListIn.v.add(STRING_SQ1.v); ListIn1.v = ListIn.v;!! ListIn |
+e0  !!  ListIn.v.add(e01.v);ListIn1.v = ListIn.v;  !! ListIn  | #
+
+
+paramList<v:ArrayList>  ::= !! paramListIn1.v = new ArrayList();!!  paramListIn !! paramList.v = paramListIn1.v;!! 
+paramListIn<v:ArrayList>  ::=
+ID  !! paramListIn.v.add(ID1.v);paramListIn1.v = paramListIn.v; !! paramListIn  |#
+
+
+e0 <v:Object> ::= e1
+!! e0.v = e11.v; !!
+|'('  '>' e1   list ')'!! {e0.v = 1; int comp =  (int)e11.v; for(Object item:list1.v){ e0.v = comp > (int)item ? 1 : 0;comp = (int)item;  if((int)e0.v == 0){break;}} }!!
+|'(' '<' e1   list ')'!! {e0.v = 1; int comp =  (int)e11.v; for(Object item:list1.v){ e0.v = comp < (int)item ? 1 : 0;comp = (int)item;  if((int)e0.v == 0){break;}} }!!    
+|'(' '>='  e1  list ')' !! {e0.v = 1; int comp =  (int)e11.v; for(Object item:list1.v){ e0.v = comp >= (int)item ? 1 : 0;comp = (int)item;  if((int)e0.v == 0){break;}} }!!    
+|'(' '<='   e1  list ')' !! {e0.v = 1; int comp =  (int)e11.v; for(Object item:list1.v){ e0.v = comp <= (int)item ? 1 : 0;comp = (int)item;  if((int)e0.v == 0){break;}} }!!
+|'(' '/='  e1  list ')'!! {e0.v = 1; int comp =  (int)e11.v; for(Object item:list1.v){ e0.v = comp != (int)item ? 1 : 0;comp = (int)item;  if((int)e0.v == 0){break;}} }!!
+|'(' '=' e1  list ')'!! {e0.v = 1; int comp =  (int)e11.v; for(Object item:list1.v){ e0.v = comp == (int)item ? 1 : 0; comp = (int)item; if((int)e0.v == 0){break;}} }!!
+
+
+e1 <v:Object >::= e2
+!! e1.v = e21.v; !!  
+|'(' '+' e1  list ')' !!  e1.v = e11.v; for(Object item:list1.v){e1.v =(int)e1.v + (int)item; }!!     
+|'(' '-' e1  list ')' !!  if(list1.v.size()>=1){e1.v = (int)e11.v;}else{e1.v = -(int)e11.v;} for(Object item:list1.v){e1.v =(int)e1.v - (int)item;} !!                 
+|'(' '*'  e1 list ')'!!  e1.v = e11.v; for(Object item:list1.v){e1.v =(int)e1.v * (int)item;  }!!
+|'(' '/' e1  list ')' !!  e1.v = e11.v; for(Object item:list1.v){e1.v =(int)e1.v /(int)item;}!!
+|'(' '%' e1  e1 ')'!!  e1.v = (int)e11.v % (int)e12.v; !!
+|'(' '**' e1  e1 ')'!!  e1.v = (int) Math.pow((int)e11.v, (int)e12.v);!!
+
+
+e2<v:Object> ::= INTEGER     // Integer literal 
+!! e2.v = INTEGER1.v; !!             
+| ID !!  e2.v = variables.get(ID1.v);!!
+| '(' functions ')' !! e2.v = functions1.v;
+!!  
+
+// Lexical rules
+ID <v:Object>        ::= &ID !! ID.v = lexeme(); !!  
+STRING_SQ <v:String> ::= &STRING_SQ !! STRING_SQ.v = lexemeCore().translateEscapes(); !!
+INTEGER              ::= &INTEGER   !! INTEGER.v = Integer.parseInt(lexeme()); !!
+
+// !generate actions
+
+
+(* plugin examples *)
+
+
+!try "(plugin 'init')
+       (defun topHatHead (dist gap gap2)
+           (for (:=  i 0) ( < i  dist)  (++ i)
+          (sphere 15)
+          (colour 1 1 0)
+          (move 0 0 20)
+          (cylinder 8 20)
+          (move 0 0 (- 10))
+          (cylinder 10 6)
+          (rotate 'x' 90)
+          (move (* i gap2) (* i gap) 0)  (pop)))
+   (let ((:= x (map (lambda ( a) (return (* a 10))) 1 5 25))
+        (:= y (map (lambda ( a) (return (* a (- 10)))) 1 5 25 )))
+       (for (:=  i 0) ( < i  2)  (++ i)
+          (topHatHead 20 (index x i) (index y i))))"
+
+
+!try
+    "(plugin 'init')
+      (defun makeCounter (x)
+       (let ((:= count x))
+         (return (list
+              (lambda (y) (:= count (+ count y)))
+              (lambda () (return count))))))
+              
+       (defun increaseCounter (counter x)
+              (funcall (index counter 0) x))
+       (defun getCount (counter)
+              (return (funcall (index counter 1))))
+              
+       (defun wheelPair (dist1 dist2)
+          (cylinder 30 10)
+          (colour 1 1 1) 
+          (cylinder 10 30)
+          (colour 0 1 0) 
+          (rotate 'z' 90)
+          (move   dist1 dist2 0)
+          (pop))
+
+        (defun body ()
+         (cylinder  50 500)
+         (rotate 'x' 0)
+         (move 50  200   (- 40))
+         (colour 1 1 0)
+         (pop))
+
+       (defun front ()
+         (cylinder 20 50)
+         (rotate 'x' 90)
+         (colour 1 1 0)
+         (move 0 0 (- 40))
+         (sphere 45)
+         (colour 1 0 0)
+         (move 50  (- 20)   (- 40))
+         (pop))
+         
+       (defun middle ()
+         (cube 80 250 100)
+         (move 50 250   (- 60))
+         (colour 0 1 0)
+         (pop))
+
+      (defun wheels()
+       (for (:= counter  (makeCounter 0)) (< (getCount counter)  4) (increaseCounter counter 1)
+             (let ((:= vertDist (* 150 (getCount counter))))
+             (wheelPair 0 vertDist)
+             (wheelPair 100 vertDist))) (pop))
+
+
+       (body) (front) (middle)  (wheels) "
+
+
+
+
+
+
+
+
+(* tests *)
+
+
+
+// // operation tests
+// !try "(+ 2 2 3 3) == 10"
+// !try "(* 10 2 10) == 200"
+// !try "(- 100 10 10 10 10 10 10) == 40"
+// !try "(/ 1000 10 10 10 ) == 1"
+// !try "(% 4 2) == 0"
+// !try "(% 4 3) == 1"
+// !try "(- 1) == (- 1)"
+// !try "(> 2 3 4) == 0"
+// !try "(> 4 3 2) == 1"
+// !try "(= 2 2 2 2) == 1"
+// !try "(= 2 3 2 2) == 0"
+// !try "(/= 2 3 1 0) == 1"
+// !try "(/= 2 2 2 2) == 0"
+// !try "(>= 2 3 3 4) == 0"
+// !try "(>= 4 4 3 3) == 1"
+// !try "(<= 4 4 3 3) == 0"
+// !try "(<= 2 3 3 4) == 1"
+// !try "(= 1) == 1"
+// !try "(= 1 1) == 1"
+// !try "(= 1 0) == 0"
+// !try "(** 2 3) == 8"
+
+
+// !try "(/ (- (* (- (+ 4  2)  3)  2)  4) 2) == 1" 
+// !try " (+ (% 4 2) (% 5 2)) == 1"
+// !try " (+ (- 4 2) (- 6 2)) == 6"
+
+
+// // asserts tests
+// !try "(:= a 2) (assert (= a (+ 1 1)))"
+// !try "(assert (= (if (= 1 1) 1 (else 2)) (if (= 1 2) 2 (else 1))))"
+// !try "(assert (= (if (= 1 1)  5) (if (= 2 2)  5)))"
+// !try "(assert (= 2 2))"
+// !try "(assert (/= 2 3))"
+// !try "(if (= 1 1) 2 (else 0)) == 2"
+
+// /////++ and -- tests
+// !try "( := b 4) (++ b) (assert (= b 5))  (print b)"
+// !try "(:= b  4) ( -- b)   (print b) b == 3"
+
+// /////assign tests
+// !try "(:= i 2) (+ i 2) == 4"
+// !try " (:= b 6)(:= c 6) (assert (= b 6))"
+// !try " (:= b 6) (:= b (- b  1)) b  == 5"
+
+// /////lambda tests
+
+// !try "(funcall (lambda ( a b ) (return (* a 2))) 1 2 ) ==  2 "
+// !try "(funcall (lambda ( a b ) (return a)) 1 2 ) == 1  "
+
+// /////function tests
+// !try "(defun times ( a b ) (return (+ (* a 2) (* b 2)))) (times 2 3) == 10"
+// !try " (defun times ( a b ) (return (+ (* a 2) (* b 2))))(times 4 3) == 14"
+// !try "(:= i 2) (defun times ( a b ) (return (+ (* a 2) (* b 2))))(times i i) == 8"
+// !try "(defun times ( a b ) (return (+ (* a 2) (* b 2)))) (times 2 2) == 8"
+
+
+// /////while tests
+// !try "(:= a 6) (:= b  9) (while (/= a b) ((if (> a b) (:= a (- a  b))(else (:= b (- b  a))))))  a   == 3"
+
+
+// // for tests
+// !try "(print 1)(:= b 6) (for (:= a 9) (> a b)  (:= a  (- a  1)) (print a))"
+// !try "( := b 6) (for (:=  a 9) ( > a  b)  (:= a  (- a 1)) (:= b a)) (assert (= b 6))"
+
+
+
+
+// ////switch tests
+// !try "(switch 3 (case 3 (print (+ 4  2))))"
+// !try "(switch 3 (case 3 (print (+ 4  2))) (case 3  (print 2)) (case 5 (print 5)))"
+// !try "(switch 3 (case 3 (print (+ 4 2))) (case 3  (print 2)) (case 5 (print 5)) (case 3 (print 222)))"
+// !try "(switch 3 (case 3 (print (+ 4  2)) (break)) (case 3  (print 2)) (case 5 (print 5)))"
+// !try "(switch 3 (case 3 (+ 4  2) (break)) (case 3  2) (case 5 5)) "
+// !try "(switch 3 (case 3 (break)) (case 3  (print 2)) (case 5 (print 5)))"
+
+
+// /////try tests
+// !try "(try (print 2)  (catch (print 3) (print 4)))"
+// !try "(try (print 2) (error)  (catch (print 3) (print 4)))"
+// !try "(try (print 2) (error) (print 5) (catch (print 3) (print 4)))"
+
+
+// ////let tests
+// !try " (:= a 5) (let((:= a 2) (:= b 3)) (assert (= a 2)) (assert (= b 3)))"
+// !try " (:= a 5) (let((:= a 2) (:= b 3)) (:= a 5) (assert (= a 5)) (assert (= b (- a 2))))"
+
+// ////complicated function tests
+
+// !try "(:= i 2)
+//       (defun times2 ( b )
+//           (return (* b 2)))
+//       (defun times4 ( a )
+//          (return (* 2 (times2 a))))
+//        (times4 2) == 8"
+
+// !try "(:= i 2)
+//       (defun times4 ( a )
+//          (return (* 2 (times2 a))))
+//       (defun times2 ( b )
+//           (return (* b 2)))
+//        (times4 2) == 8"
+
+// !try "(:= i 2)
+//       (defun times4 ( a )
+//          (return (*   2 (times2 a))))
+//       (defun times2 ( a )
+//           (return (* a 2)))
+//        (times4 2) == 8"
+
+// !try "(defun higherOrder ( func1 func2 x)
+//           (return (+ (func1 x) (func2 x))))
+//       (defun times2 ( a )
+//           (return (* a 2)))
+//       (defun times4 ( a )  
+//           (return (* a 4)))
+//       (higherOrder times2 times4 5) ==30"
+
+// !try "
+//      (defun times2 ( a )
+//           (return (* a 2)))
+//      (defun times8 (x)
+//           (return (times2 (times2 (* 2 x)))))
+//       (times8 4) == 32"
+
+// !try "(defun recursive ( a )
+//           (if (= a  0)
+//           (return 1)
+//           (else (-- a)
+//            (recursive a)))
+//            (print a))
+//         (recursive 10) == 1"
+// // add in else
+
+// !try " (defun recursive ( a )
+//           (if (= a  0)
+//            (return 1)
+//           (else (-- a)
+//            (recursive a))))
+//         (assert (= (recursive 10) 1))"
+
+
+
+// !try "(defun functionsList ()
+//         (return
+//               (list  
+//                 (lambda ()(return 2))
+//                 (lambda () (return 3)))))
+//       (assert (= (funcall (index (functionsList) 0)) 2))
+//       (assert (= (funcall (index (functionsList) 1)) 3))"
+
+
+// ////list tests
+// !try "(index (list 1 2 3 4) 2) == 3"
+// // !try "(:= x  (list 1 2 3 4))  (index x 2) == 3"
+
+
+// // ////closure tests (not complete) closures of lambdas don't capture after being created
+
+// !try " 
+//     (defun makeCounter (x)
+//        (let ((:= count test))
+//        (print 'test')
+//          (let ((:= z 1))
+//          (return (list
+//               (lambda (y) (:= count (+ count y z))(++ z))
+//               (lambda () (return count)))))))
+//        (defun increaseCounter (counter x)
+//               (funcall (index counter 0) x))
+
+//         (defun getCount (counter)
+//               (return (funcall (index counter 1))))
+//         (:= test 3)
+//        (:= counter (makeCounter 5))
+//        (increaseCounter counter 1)
+//        (increaseCounter counter 2)
+//        (getCount counter) == 9"
+
+
+// !try " 
+//     (defun makeCounter (x)
+//        (let ((:= count x))
+//          (return (list
+//               (lambda (y) (:= count (+ count y)))
+//               (lambda () (return count))))))
+//        (defun increaseCounter (counter x)
+//               (funcall (index counter 0) x))
+
+//         (defun getCount (counter)
+//               (return (funcall (index counter 1))))
+//        (:= counter (makeCounter 5))
+//        (increaseCounter counter 1)
+//        (increaseCounter counter 2)
+//        (getCount counter) == 8"
+
+// // map test
+// !try "(map (lambda ( a) (return (* a 3))) 1 2 ) == (list 3 6)"
+
+
+
+// ///// random 
+// !try  "(print (if (= 1 1) 2 (else 4)))"
+// !try "(:= a (funcall (lambda ( a b ) (return a )) 1 2 )) (print a) "
+// !try "(:= a 2) (:= b a) (:= c b) (:= a (+ a 1))  (print c)"
+// !try "(plugin 'invert' 2) == (- 2)"
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+//need to run individually
+// !try "(plugin 'init')(cube 50 50 50)(pop)"
+// !try "(plugin 'init')(cube 50 50 50)(move 20 30 40)(pop)"
+// !try "(plugin 'init')(cube 50 50 50)(move 20 30 40)"
+
+// !try "(plugin 'init')(cube 50 50 50)(rotate 'x' 30)"
+// !try "(plugin 'init')(sphere 15)(scale 20 20 20)"
+// !try "(plugin 'init')(cylinder 5 20)(move 20 20 20)"
+// !try "(plugin 'init')(cube 20 20 20)(colour 0 1 1)"
+// !try "(plugin 'init')(cube 20 20 20)(colour 0 1 1)(pop)"
+
+
+
