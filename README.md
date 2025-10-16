@@ -1,8 +1,13 @@
+# ART Software Language Engineering Coursework
 This is a my coursework for the CS3480 - Software Language Engineering module.
 
 We were tasked with creating two different programming languages for a specific domain. I decided to go for the 3D modelling option, and create a DSL less bloated than OpenSCAD.
 
-Throughout this module we made use of the [ART](https://github.com/AJohnstone2007/ART) (Ambiguity Retained Translation) toolkit 
+Throughout this module we made use of the [ART](https://github.com/AJohnstone2007/ART) (Ambiguity Retained Translation) toolkit
+
+This provided an intuitive way to write logic based programming language specifications in a programmer oriented way.
+
+## About the languages
 
 There are two separate programming language specifications for 2 different 3D modeling related Domain Specific Languages (DSLs):
 1. One specification was written using Executable Structural Operational Semantics (SOS)
@@ -11,7 +16,7 @@ There are two separate programming language specifications for 2 different 3D mo
 Both these languages were Lisp-like languages.
 The backend is Java and JavaFX is used to display the 3D modelling. The commands used to interact with the JavaFx plugin were implemented in a stack like way.
 
-# Language 1 Example  (eSOS Semantics)
+## Language 1 Example  (eSOS Semantics)
 Features include: 
 - Lexical scoping
 - Lambdas
@@ -69,7 +74,7 @@ Additionally, there are commands such as (Sphere, Cube, Cylinder, Move, Rotate, 
        (pop) |"
 ```
 
-# Language 2 Example  (Attribute Grammar)
+## Language 2 Example  (Attribute Grammar)
 Features include: 
 - Lexical scoping
 - Lambdas
