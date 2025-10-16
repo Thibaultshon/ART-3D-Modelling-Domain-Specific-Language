@@ -7,6 +7,13 @@ Throughout this module we made use of the [ART](https://github.com/AJohnstone200
 
 This provided an intuitive way to write logic based programming language specifications in a programmer oriented way.
 
+## Running it
+> Note: Running it requires an **art.jar** file which can be found in [ART](https://github.com/AJohnstone2007/ART)
+
+> Note: You also need to have **JavaFX** accessible
+
+ Once that is set up, you need to amend the `runReduction.bat` and `runAttribute.bat` to fit your system's configuration.
+
 ## About the languages
 
 There are two separate programming language specifications for 2 different 3D modeling related Domain Specific Languages (DSLs):
@@ -30,39 +37,39 @@ Additionally, there are commands such as (Sphere, Cube, Cylinder, Move, Rotate, 
 
 ```
 (if (and (> 2 1) true)   (!print 2!) (!print 3!))                     = __done, {=},[2],[{=}] 
-!:= x 2! (++ x)                                               = __done, {0=2, 1=3},[],[{x=1}]
-!:= x 2! (-- x) !print x!                                  = __done, {0=2, 1=1},[1],[{x=1}]
+!:= x 2! (++ x)                                                       = __done, {0=2, 1=3},[],[{x=1}]
+!:= x 2! (-- x) !print x!                                             = __done, {0=2, 1=1},[1],[{x=1}]
 
-!:= x 4!  |while (> x 1)  (-- x) !print 2!|                = __done, {0=4,1=3,2=2,3=1},[2,2,2],[{x=3}]
+!:= x 4!  |while (> x 1)  (-- x) !print 2!|                           = __done, {0=4,1=3,2=2,3=1},[2,2,2],[{x=3}]
 
 (index  ( list 1 2 3 4 ) 2)                = 3, {=},[],[{=}]
 
 |for !:= i 6! (/= i 4) (-- i) 
-      !print i!|"                                                        = __done, {0=6, 1=5, 2=4}, [5, 6], [{=}]
+      !print i!|"                                                     = __done, {0=6, 1=5, 2=4}, [5, 6], [{=}]
 
 
 
-[let (!:= a 3! !:= b 4!) !print a! !print b!]"              = __done, {0=3, 1=4},[4,3],[{=}]
+[let (!:= a 3! !:= b 4!) !print a! !print b!]"                        = __done, {0=3, 1=4},[4,3],[{=}]
 
 (switch 3 (case 3  !print 4!)
          (case 2 !print 5!
-                    (break)))"                                           = __done, {=},[4],[{=}]
+                    (break)))"                                        = __done, {=},[4],[{=}]
 !try "(try
       (if (< 1 2)
           (error))
       (catch
           !print 'error'!)
       (end
-          !print 'resolve'!))"                                               = __done, {=},["resolve","error"],[{=}]
+          !print 'resolve'!))"                                         = __done, {=},["resolve","error"],[{=}]
 
 
      : double [(x) !print (* x 2)!]                               
-     [func double 2]"                                               = __done,{0=[lambda([x], output(mul(deref(x), 2)))],1=2},[4],[{double=0}]
+     [func double 2]"                                                 = __done,{0=[lambda([x], output(mul(deref(x), 2)))],1=2},[4],[{double=0}]
      
 
-[funcall (\ (x y) !print (+ x y)!) 2 3]                 = __done, {0=2,1=3},[5],[{=}]
+[funcall (\ (x y) !print (+ x y)!) 2 3]                               = __done, {0=2,1=3},[5],[{=}]
 
-|map (\ (x) (return (* (+ x 1) 2))) (1 2 3 4 5)|"      = [4,6,8,10,12], {0=1,1=2,2=3,3=4,4=5},[],[{=}]
+|map (\ (x) (return (* (+ x 1) 2))) (1 2 3 4 5)|"                     = [4,6,8,10,12], {0=1,1=2,2=3,3=4,4=5},[],[{=}]
 
 
 (plugin 'init')
